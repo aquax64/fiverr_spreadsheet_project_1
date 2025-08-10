@@ -1,0 +1,469 @@
+﻿
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using ClosedXML.Excel;
+
+namespace Fiverr_spreadsheet_project_1.Libraries
+{
+    internal class DataHandler
+    {
+        public class Job
+        {
+            public string workerName = string.Empty; 
+            public string jobDescription = string.Empty;
+            public double hours = 0.0;
+        }
+
+        public class Client
+        {
+            public string clientName = string.Empty;
+
+            public List<Job> jobs = new List<Job>();
+
+            public List<int> locations = new List<int>();
+
+            public Dictionary<string, double> jobHours = new Dictionary<string, double>();
+
+            public double totalJobHours = 0.0; // not including travel
+
+            public double totalTravelHours = 0.0;
+        }
+
+        public void ConvertCsvToExcel(string csvPath, string excelPath, bool appending)
+        {
+            string[][] data = ReadCsv(csvPath);
+            WriteToExcel(data, excelPath, appending);
+        }
+
+        public string[][] ReadCsv(string csvPath)
+        {
+            string[] lines;
+
+            string[][] data = null;
+
+            try
+            {
+                // Read all lines
+                lines = File.ReadAllLines(csvPath);
+            
+
+                // Put into a 2D array in the format of [row][column]
+                data = new string[lines.Length][];
+
+                for (int i = 0; i < lines.Length; i++)
+                {
+                    // Split into columns
+                    data[i] = lines[i].Split(',');
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
+
+            return data;
+        }
+
+        public void WriteToExcel(string[][] data, string excelPath, bool appending)
+        {
+            bool errorHasOccurred = false;
+
+            // Get information first before adding it
+            // Make a list for all the clients
+            List<Client> clients = new List<Client>();
+
+            // For checking for multiple entries
+            List<string> clientNames = new List<string>();
+
+            // List of names
+            List<string> workerNames = new List<string>();
+
+            // To keep track of the hours each worker does for each client
+            Dictionary<string, Dictionary<string, double>> workerHourInfo = new Dictionary<string, Dictionary<string, double>>();
+
+            // !!! May need to change if he has data coming in with the same client on multiple rows
+            // First we must find all the clients
+            bool end = false;
+            int i = 1;
+            while (!end)
+            {
+                if (data.Length <= i)
+                {
+                    end = true;
+                }
+                else
+                {
+                    if (data[i].Length < 15)
+                    {
+                        i++;
+                        continue;
+                    }
+
+                    string name = data[i][12];
+
+                    if (clientNames.Contains(name))
+                    {
+                        clients[clientNames.IndexOf(name)].locations.Add(i);
+                    }
+                    else
+                    {
+                        Client newClient = new Client();
+
+                        newClient.clientName = name;
+
+                        newClient.locations.Add(i);
+
+                        clients.Add(newClient);
+                        clientNames.Add(name);
+                    }
+                }
+                i++;
+            }
+
+            // Start at the first row and read in the first client
+            // Then go through each client
+            foreach (Client c in clients)
+            {
+                foreach (int loc in c.locations)
+                {
+                    // Get worker name, job name, and hours
+                    Job newJob = new Job();
+
+                    // Worker
+                    string _workerName = newJob.workerName = data[loc][2];
+
+                    if (!workerNames.Contains(_workerName))
+                        workerNames.Add(_workerName);
+
+                    // Job
+                    // XXXXXXXXX Check indexes 15, 16, and 17 (to find which job) (DEPRECATED)
+                    // Now using a config method
+                    // Also use the new dictionary created from the config
+                    string taskTitle = "";
+                    string errorTracker = "ERROR 301";
+                    try
+                    {
+                        if (data[loc][Loader.ADMIN_START] != string.Empty)
+                        {
+                            errorTracker = data[loc][Loader.ADMIN_START].Replace("\"", "");
+                            taskTitle = newJob.jobDescription = Loader.configPairs[data[loc][Loader.ADMIN_START].Replace("\"", "")];
+                        }
+                        else if (data[loc][Loader.ADMIN_START + 1] != string.Empty)
+                        {
+                            errorTracker = data[loc][Loader.ADMIN_START + 1].Replace("\"", "");
+                            taskTitle = newJob.jobDescription = Loader.configPairs[data[loc][Loader.ADMIN_START + 1].Replace("\"", "")];
+                        }
+                        else if (data[loc][Loader.ADMIN_START + 2] != string.Empty)
+                        {
+                            errorTracker = data[loc][Loader.ADMIN_START + 2].Replace("\"", "");
+                            taskTitle = newJob.jobDescription = Loader.configPairs[data[loc][Loader.ADMIN_START + 2].Replace("\"", "")];
+                        }
+                        else
+                        {
+                            // If empty it goes in fieldwork
+                            taskTitle = newJob.jobDescription = "Fieldwork";
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show($"\"{errorTracker}\" was not found when loading the config (config.txt) file."); // Removed details: " \n\nDetails: \"${e.Message}\" "
+                        errorHasOccurred = true;
+                    }
+
+                    try
+                    {
+                        if (!workerHourInfo.ContainsKey(_workerName))
+                        {
+                            workerHourInfo[_workerName] = new Dictionary<string, double>();
+                        }
+                        if (!workerHourInfo[_workerName].ContainsKey(c.clientName))
+                        {
+                            workerHourInfo[_workerName][c.clientName] = 0;
+                        }
+
+                        // Hours
+                        newJob.hours = double.Parse(data[loc][11]);
+
+                        if (newJob.jobDescription != "Travel") // Total anything that's not travel
+                        {
+                            c.totalJobHours += newJob.hours;
+                        }
+                        else // Total travel on its own (add both later)
+                        {
+                            c.totalTravelHours += newJob.hours;
+                        }
+
+                        workerHourInfo[_workerName][c.clientName] += newJob.hours;
+                    } catch (Exception e)
+                    {
+                        errorHasOccurred = true;
+                        MessageBox.Show($"Error Parsing job hours (Cell L{loc + 1}): {e.Message}");
+                    }
+
+
+                    c.jobs.Add(newJob);
+                }
+
+                // Now calculate the hours for each type of job
+                foreach (Job job in c.jobs)
+                {
+                    if (!c.jobHours.ContainsKey(job.jobDescription))
+                    {
+                        c.jobHours[job.jobDescription] = 0;
+                    }
+                    c.jobHours[job.jobDescription] += job.hours;
+                }
+            }
+
+            try
+            {
+                // Add values
+                using (var workbook = new XLWorkbook(excelPath))
+                {
+                    var ws = workbook.Worksheet(1);
+
+                    // Getting first empty row 
+                    // Was using Column A now using B just incase number pattern isn't repeated
+                    int lastRow = ws.Column(2).LastCellUsed().Address.RowNumber;
+
+                    Dictionary<string, int> clientRowLocation = new Dictionary<string, int>();
+
+                    // Make a dictionary of where each client is
+                    for (int j = 3; j < lastRow + 1; j++)
+                    {
+                        string clientName = ws.Cell(j, 2).Value.GetText();
+
+                        clientRowLocation[clientName] = j;
+                    }
+
+                    int index = lastRow + 1;
+
+                    // Get worker count (this is the amount of names displayed inside of the book)
+                    List<string> workerNamesInBook = new List<string>();
+                    int workerCount = 0;
+                    if (!ws.Cell(2, 47).IsEmpty())
+                    {
+                        workerNamesInBook.Add(ws.Cell(2, 47).GetValue<string>());
+                        workerCount++;
+
+                        bool countFound = false;
+                        while (!countFound)
+                        {
+                            if (!ws.Cell(2, 47 + (workerCount * 2)).IsEmpty())
+                            {
+                                workerNamesInBook.Add(ws.Cell(2, 47 + (workerCount * 2)).GetValue<string>());
+                                workerCount++;
+                            }
+                            else
+                            {
+                                countFound = true;
+                            }
+                        }
+                    }
+
+                    // Now loop and add values
+                    foreach (Client c in clients)
+                    {
+                        int ogIndex = -1;
+
+                        if (clientRowLocation.ContainsKey(c.clientName))
+                            ogIndex = clientRowLocation[c.clientName];
+
+                        // First add the number
+                        if (ogIndex == -1)
+                            ws.Cell(index, 1).Value = index - 2;
+
+                        // Next add the Client name
+                        if (ogIndex == -1)
+                            ws.Cell(index, 2).Value = c.clientName;
+
+                        // Add to the location list
+                        if (ogIndex == -1)
+                        {
+                            clientRowLocation.Add(c.clientName, index);
+                        }
+
+                        // Then job hours
+
+                        double planningTotal = 0.0;
+                        if (!ws.Cell(ogIndex == -1 ? index : ogIndex, 8).IsEmpty())
+                            planningTotal = ws.Cell(ogIndex == -1 ? index : ogIndex, 8).Value.GetNumber();
+                        // Planning
+                        if (c.jobHours.ContainsKey("Planning"))
+                        {
+                            planningTotal += c.jobHours["Planning"];
+                            ws.Cell(ogIndex == -1 ? index : ogIndex, 8).Value = planningTotal;
+                        }
+
+                        // Inventory Co.
+                        double inventoryTotal = 0.0;
+                        if (!ws.Cell(ogIndex == -1 ? index : ogIndex, 10).IsEmpty())
+                            inventoryTotal = ws.Cell(ogIndex == -1 ? index : ogIndex, 10).Value.GetNumber();
+                        if (c.jobHours.ContainsKey("Inventory Co."))
+                        {
+                            inventoryTotal += c.jobHours["Inventory Co."];
+                            ws.Cell(ogIndex == -1 ? index : ogIndex, 10).Value = inventoryTotal;
+                        }
+
+                        // Interim
+                        double interimTotal = 0.0;
+                        if (!ws.Cell(ogIndex == -1 ? index : ogIndex, 12).IsEmpty())
+                            interimTotal = ws.Cell(ogIndex == -1 ? index : ogIndex, 12).Value.GetNumber();
+                        if (c.jobHours.ContainsKey("Inventory Co."))
+                        {
+                            interimTotal += c.jobHours["Inventory Co."];
+                            ws.Cell(ogIndex == -1 ? index : ogIndex, 12).Value = interimTotal;
+                        }
+
+                        double fieldworkTotal = 0.0;
+                        if (!ws.Cell(ogIndex == -1 ? index : ogIndex, 14).IsEmpty())
+                            fieldworkTotal = ws.Cell(ogIndex == -1 ? index : ogIndex, 14).Value.GetNumber();
+                        // Fieldwork
+                        if (c.jobHours.ContainsKey("Fieldwork"))
+                        {
+                            fieldworkTotal += c.jobHours["Fieldwork"];
+                            ws.Cell(ogIndex == -1 ? index : ogIndex, 14).Value = fieldworkTotal;
+                        }
+
+                        double reportingTotal = 0.0;
+                        if (!ws.Cell(ogIndex == -1 ? index : ogIndex, 16).IsEmpty())
+                            reportingTotal = ws.Cell(ogIndex == -1 ? index : ogIndex, 16).Value.GetNumber();
+                        // Reporting
+                        if (c.jobHours.ContainsKey("Reporting"))
+                        {
+                            reportingTotal += c.jobHours["Reporting"];
+                            ws.Cell(ogIndex == -1 ? index : ogIndex, 16).Value = reportingTotal;
+                        }
+
+                        double revSupTotal = 0.0;
+                        if (!ws.Cell(ogIndex == -1 ? index : ogIndex, 18).IsEmpty())
+                            revSupTotal = ws.Cell(ogIndex == -1 ? index : ogIndex, 18).Value.GetNumber();
+                        // Review and Sup
+                        if (c.jobHours.ContainsKey("Review and Sup"))
+                        {
+                            revSupTotal += c.jobHours["Review and Sup"];
+                            ws.Cell(ogIndex == -1 ? index : ogIndex, 18).Value = revSupTotal;
+                        }
+
+                        double meetingsTotal = 0.0;
+                        if (!ws.Cell(ogIndex == -1 ? index : ogIndex, 20).IsEmpty())
+                            meetingsTotal = ws.Cell(ogIndex == -1 ? index : ogIndex, 20).Value.GetNumber();
+                        // Meetings
+                        if (c.jobHours.ContainsKey("Meetings"))
+                        {
+                            meetingsTotal += c.jobHours["Meetings"];
+                            ws.Cell(ogIndex == -1 ? index : ogIndex, 20).Value = meetingsTotal;
+                        }
+
+                        double processingTotal = 0.0;
+                        if (!ws.Cell(ogIndex == -1 ? index : ogIndex, 22).IsEmpty())
+                            processingTotal = ws.Cell(ogIndex == -1 ? index : ogIndex, 22).Value.GetNumber();
+                        // Processing
+                        if (c.jobHours.ContainsKey("Processing"))
+                        {
+                            processingTotal += c.jobHours["Processing"];
+                            ws.Cell(ogIndex == -1 ? index : ogIndex, 22).Value = processingTotal;
+                        }
+
+                        // Completion
+                        double completionTotal = 0.0;
+                        if (!ws.Cell(ogIndex == -1 ? index : ogIndex, 24).IsEmpty())
+                            completionTotal = ws.Cell(ogIndex == -1 ? index : ogIndex, 24).Value.GetNumber();
+                        if (c.jobHours.ContainsKey("Completion"))
+                        {
+                            completionTotal += c.jobHours["Completion"];
+                            ws.Cell(ogIndex == -1 ? index : ogIndex, 24).Value = completionTotal;
+                        }
+
+                        // Total
+                        double total = planningTotal + inventoryTotal + interimTotal + fieldworkTotal + reportingTotal + revSupTotal + meetingsTotal + processingTotal + completionTotal;
+                        ws.Cell(ogIndex == -1 ? index : ogIndex, 26).Value = total;
+
+                        // Travel
+                        double travelTotal = 0.0;
+                        if (!ws.Cell(ogIndex == -1 ? index : ogIndex, 28).IsEmpty())
+                            travelTotal = ws.Cell(ogIndex == -1 ? index : ogIndex, 28).Value.GetNumber() + c.totalTravelHours;
+                        else
+                            travelTotal = c.totalTravelHours;
+                        ws.Cell(ogIndex == -1 ? index : ogIndex, 28).Value = travelTotal;
+
+                        // Grand Total
+                        double grandTotal = total + travelTotal;
+                        ws.Cell(ogIndex == -1 ? index : ogIndex, 30).Value = grandTotal;
+
+
+                        // Only need to increment if a client isn't already in the books
+                        if (ogIndex == -1)
+                            index++;
+                    }
+
+                    int formerWorkerCount = workerCount;
+                    // Finally add the worker names to the list
+                    foreach (string name in workerNames)
+                    {
+                        // Check if the worker is already in the book
+                        if (workerNamesInBook.Contains(name))
+                        {
+                            continue; // Skip this worker if they are already in the book
+                        }
+                        else
+                        {
+                            // Add the name to workerNamesInBook (as they are just added)
+                            // then the index of the name will act as a location finder
+                            workerNamesInBook.Add(name);
+                        }
+
+                        // Shift every column past the last worker on to the right by N (maybe 2) columns
+                        int N = 2;
+                        ws.Column(47 + (workerCount * 2) + 1).InsertColumnsBefore(N);
+
+                        // Format Columns
+                        for (int j = 0; j < N; j++)
+                        {
+                            // int newIndex = (47 + (workerCount * 2) + 1) + j;
+                            int newIndex = (47 + (workerCount * 2) - 1) + j;
+                            ws.Column(newIndex).Style = ws.Column(47).Style;
+                        }
+
+                        // Add the workers name
+                        int col = 47 + (workerCount * 2);
+                        ws.Cell(2, col).Value = name;
+                        ws.Cell(2, col).Style.Border.BottomBorder = XLBorderStyleValues.Thin;
+
+                        workerCount++;
+                    }
+
+                    foreach (var worker in workerHourInfo)
+                    {
+                        foreach (var client in worker.Value)
+                        {
+                            double temp = 0.0;
+                            if (!ws.Cell(clientRowLocation[client.Key], 47 + (workerNamesInBook.IndexOf(worker.Key) * 2)).IsEmpty())
+                                temp = ws.Cell(clientRowLocation[client.Key], 47 + (workerNamesInBook.IndexOf(worker.Key) * 2)).Value.GetNumber();
+                            ws.Cell(clientRowLocation[client.Key], 47 + (workerNamesInBook.IndexOf(worker.Key) * 2)).Value = client.Value + temp;
+                        }
+                    }
+
+                    if (!errorHasOccurred)
+                    {
+                        workbook.Save();
+                    } else
+                    {
+                        return;
+                    }
+                }
+
+                MessageBox.Show("Hour Report has successfully been added to the Analysis sheet");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+                errorHasOccurred = true;
+            }
+        }
+    }
+}
