@@ -14,6 +14,7 @@ namespace Fiverr_spreadsheet_project_1.Libraries
         public static Dictionary<string, string> configPairs = new Dictionary<string, string>();
 
         public static int ADMIN_START = -1;
+        public static int TITLEROW = -1;
 
         public static void LoadConfig()
         {
@@ -67,7 +68,7 @@ namespace Fiverr_spreadsheet_project_1.Libraries
             Console.WriteLine("Finished loading config");
         }
 
-        public static void LoadcsvStart()
+        public static void LoadOtherConfigs()
         {
             configPath = Path.Combine(Environment.CurrentDirectory, "csvstart.txt");
             configText = File.ReadAllText(configPath);
@@ -86,14 +87,41 @@ namespace Fiverr_spreadsheet_project_1.Libraries
                     }
                 }
             }
-            catch (Exception ex)
+            catch (FormatException ex)
             {
                 MessageBox.Show($"Error Parsing number in \"csvstart.txt\". Details: {ex.Message}");
             }
+
+            configPath = Path.Combine(Environment.CurrentDirectory, "excelstart.txt");
+            configText = File.ReadAllText(configPath);
+
+            string[] _configPairs = configText.Split('\n');
+
+            try
+            {
+                foreach (string configPair in _configPairs)
+                {
+                    string[] splits = configPair.Split('=');
+
+                    if (splits[0] == "TITLEROW")
+                    {
+                        TITLEROW = int.Parse(splits[1]);
+                    }
+                }
+            }
+            catch (FormatException ex)
+            {
+                MessageBox.Show($"Error Parsing number in \"excelstart.txt\". Details: {ex.Message}");
+            }
+
             if (ADMIN_START == -1)
             {
                 MessageBox.Show("Error loading \"csvstart.txt\" config. ADMIN arguments incorrect");
                 Application.Exit();
+            }
+            if (TITLEROW == -1)
+            {
+                MessageBox.Show("Error loading \"excelstart.txt\" config. TITLEROW arguments incorrect");
             }
         }
     }

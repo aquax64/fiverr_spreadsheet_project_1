@@ -7,7 +7,7 @@
 "Contribution Testing": "Fieldwork",
 "Distribution Testing": "Fieldwork",
 "Conference/Meetings": "Meetings",
-"Notes Receivable": "Fieldwork",
+"Notes Receivable": "Fieldwork", 
 "SOC 1 Reporting": "Reporting",
 "Investments": "Fieldwork",
 "Operating Expenses": "Fieldwork",
@@ -39,4 +39,6 @@
 "Lunch": "Fieldwork",
 "Technology": "Fieldwork",
 "Internal Inspection": "Fieldwork",
-"Marketing": "Fieldwork"
+"Marketing": "Fieldwork",
+"Inventory Observation": "Fieldwork",
+"Single Audit Testing and Documentation": "Fieldwork"

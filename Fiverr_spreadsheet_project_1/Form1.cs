@@ -16,7 +16,7 @@ namespace Fiverr_spreadsheet_project_1
         {
             // Load Config Files
             Loader.LoadConfig();
-            Loader.LoadcsvStart();
+            Loader.LoadOtherConfigs();
         }
 
         private bool isResizing = false;

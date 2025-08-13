@@ -265,11 +265,25 @@ namespace Fiverr_spreadsheet_project_1.Libraries
                     Dictionary<string, int> clientRowLocation = new Dictionary<string, int>();
 
                     // Make a dictionary of where each client is
-                    for (int j = 3; j < lastRow + 1; j++)
+                    for (int j = Loader.TITLEROW + 1; j < lastRow + 1; j++)
                     {
-                        string clientName = ws.Cell(j, 2).Value.GetText();
+                        // We also must first find the start of the clients in the excel sheet
+                        if (ws.Cell(j, 1).DataType != XLDataType.Number) // Meaning: if we don't see the number indicating the increment of clients
+                        {
+                            continue; // Keep going until we find it
+                        }
 
-                        clientRowLocation[clientName] = j;
+                        var cell = ws.Cell(j, 2);
+                        try
+                        {
+                            string clientName = cell.Value.GetText();
+
+                            clientRowLocation[clientName] = j;
+                        }
+                        catch (InvalidCastException ex)
+                        {
+                            throw new Exception($"(Client name cell) Invalid number format in cell {cell.Address}: {ex.Message}");
+                        }
                     }
 
                     int index = lastRow + 1;
@@ -464,8 +478,8 @@ namespace Fiverr_spreadsheet_project_1.Libraries
 
                         // Add the workers name
                         int col = 47 + (workerCount * 2);
-                        ws.Cell(2, col).Value = name;
-                        ws.Cell(2, col).Style.Border.BottomBorder = XLBorderStyleValues.Thin;
+                        ws.Cell(Loader.TITLEROW, col).Value = name;
+                        ws.Cell(Loader.TITLEROW, col).Style.Border.BottomBorder = XLBorderStyleValues.Thin;
 
                         workerCount++;
                     }

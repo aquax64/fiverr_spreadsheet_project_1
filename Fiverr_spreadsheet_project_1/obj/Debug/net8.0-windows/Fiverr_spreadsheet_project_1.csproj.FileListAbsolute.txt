@@ -24,3 +24,4 @@ C:\Users\mraqu\source\repos\Fiverr_spreadsheet_project_1\Fiverr_spreadsheet_proj
 C:\Users\mraqu\source\repos\Fiverr_spreadsheet_project_1\Fiverr_spreadsheet_project_1\bin\Debug\net8.0-windows\System.IO.Packaging.dll
 C:\Users\mraqu\source\repos\Fiverr_spreadsheet_project_1\Fiverr_spreadsheet_project_1\obj\Debug\net8.0-windows\Fiverr_spreadsheet_project_1.csproj.AssemblyReference.cache
 C:\Users\mraqu\source\repos\Fiverr_spreadsheet_project_1\Fiverr_spreadsheet_project_1\obj\Debug\net8.0-windows\Fiverr_s.E39110B6.Up2Date
+C:\Users\mraqu\source\repos\Fiverr_spreadsheet_project_1\Fiverr_spreadsheet_project_1\obj\Debug\net8.0-windows\Fiverr_spreadsheet_project_1.sourcelink.json
