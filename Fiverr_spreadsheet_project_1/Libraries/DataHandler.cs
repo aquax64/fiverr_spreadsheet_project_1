@@ -74,10 +74,22 @@ namespace Fiverr_spreadsheet_project_1.Libraries
             if (cell.IsEmpty())
                 return 0.0;
 
+            if (cell.IsMerged())
+            {
+                MessageBox.Show($"Cell {cell.Address} is merged. This may possibly cause an error.");
+            }
+
             if (cell.DataType != XLDataType.Number)
                 throw new Exception($"Error while totaling category hours: Expected a number in cell {cell.Address}, but found '{cell.GetValue<string>()}'");
 
-            return cell.GetDouble(); // same as Value.GetNumber()
+            try
+            {
+                return cell.GetDouble(); // same as Value.GetNumber()
+            }
+            catch (InvalidCastException ex)
+            {
+                throw new Exception($"(Task cell) Invalid number format in cell {cell.Address}: {ex.Message}");
+            }
         }
 
 
@@ -199,7 +211,14 @@ namespace Fiverr_spreadsheet_project_1.Libraries
                         }
 
                         // Hours
-                        newJob.hours = double.Parse(data[loc][11]);
+                        try
+                        {
+                            newJob.hours = double.Parse(data[loc][11]);
+                        }
+                        catch (InvalidCastException ex)
+                        {
+                            throw new Exception($"(Task cell in csv) Invalid number format in cell (Row: ${loc}, Col: L ): {ex.Message}");
+                        }
 
                         if (newJob.jobDescription != "Travel") // Total anything that's not travel
                         {
@@ -385,10 +404,21 @@ namespace Fiverr_spreadsheet_project_1.Libraries
                         var cell = ws.Cell(ogIndex == -1 ? index : ogIndex, 28);
                         if (!cell.IsEmpty())
                         {
+                            if (cell.IsMerged())
+                            {
+                                MessageBox.Show($"Cell {cell.Address} is merged. This may possibly cause an error.");
+                            }
+
                             if (cell.DataType != XLDataType.Number)
                                 throw new Exception($"Error while totaling category hours: Expected a number in cell {cell.Address}, but found '{cell.GetValue<string>()}'");
 
-                            travelTotal = cell.Value.GetNumber() + c.totalTravelHours;
+                            try {
+                                travelTotal = cell.Value.GetNumber() + c.totalTravelHours;
+                            }
+                            catch (InvalidCastException ex)
+                            {
+                                throw new Exception($"(Task cell) Invalid number format in cell {cell.Address}: {ex.Message}");
+                            }
                         }
                         else
                             travelTotal = c.totalTravelHours;
@@ -451,7 +481,14 @@ namespace Fiverr_spreadsheet_project_1.Libraries
                                 if (cell.DataType != XLDataType.Number)
                                     throw new Exception($"Error while totaling worker hours: Expected a number in cell {cell.Address}, but found '{cell.GetValue<string>()}'");
 
-                                temp = ws.Cell(clientRowLocation[client.Key], 47 + (workerNamesInBook.IndexOf(worker.Key) * 2)).Value.GetNumber();
+                                try
+                                {
+                                    temp = cell.Value.GetNumber();
+                                }
+                                catch (InvalidCastException ex)
+                                {
+                                    throw new Exception($"(Worker cell) Invalid number format in cell {cell.Address}: {ex.Message}");
+                                }
                             }
                             ws.Cell(clientRowLocation[client.Key], 47 + (workerNamesInBook.IndexOf(worker.Key) * 2)).Value = client.Value + temp;
                         }
@@ -467,6 +504,12 @@ namespace Fiverr_spreadsheet_project_1.Libraries
                 }
 
                 MessageBox.Show("Hour Report has successfully been added to the Analysis sheet");
+            } 
+            catch (ClosedXML.Excel.Exceptions.ClosedXMLException cx)
+            {
+                // ClosedXML error: corruption or file format issue
+                MessageBox.Show($"Excel file appears corrupted or unreadable. Details: {cx.Message}");
+                return;
             }
             catch (Exception ex)
             {
