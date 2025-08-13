@@ -15,6 +15,7 @@ namespace Fiverr_spreadsheet_project_1.Libraries
 
         public static int ADMIN_START = -1;
         public static int TITLEROW = -1;
+        public static int SHEET_NUMBER = -1;
 
         public static void LoadConfig()
         {
@@ -107,6 +108,11 @@ namespace Fiverr_spreadsheet_project_1.Libraries
                     {
                         TITLEROW = int.Parse(splits[1]);
                     }
+
+                    if (splits[0] == "SHEET_NUMBER")
+                    {
+                        SHEET_NUMBER = int.Parse(splits[1]);
+                    }
                 }
             }
             catch (FormatException ex)
@@ -122,6 +128,10 @@ namespace Fiverr_spreadsheet_project_1.Libraries
             if (TITLEROW == -1)
             {
                 MessageBox.Show("Error loading \"excelstart.txt\" config. TITLEROW arguments incorrect");
+            }
+            if (SHEET_NUMBER == -1)
+            {
+                MessageBox.Show("Error loading \"excelstart.txt\" config. SHEET_NUMBER arguments incorrect");
             }
         }
     }

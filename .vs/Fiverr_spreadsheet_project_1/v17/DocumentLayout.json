@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\mraqu\\source\\repos\\Fiverr_spreadsheet_project_1\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{A6A404A8-050D-4845-9BED-1679B10FFA07}|Fiverr_spreadsheet_project_1\\Fiverr_spreadsheet_project_1.csproj|c:\\users\\mraqu\\source\\repos\\fiverr_spreadsheet_project_1\\fiverr_spreadsheet_project_1\\libraries\\datahandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A6A404A8-050D-4845-9BED-1679B10FFA07}|Fiverr_spreadsheet_project_1\\Fiverr_spreadsheet_project_1.csproj|solutionrelative:fiverr_spreadsheet_project_1\\libraries\\datahandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A6A404A8-050D-4845-9BED-1679B10FFA07}|Fiverr_spreadsheet_project_1\\Fiverr_spreadsheet_project_1.csproj|c:\\users\\mraqu\\source\\repos\\fiverr_spreadsheet_project_1\\fiverr_spreadsheet_project_1\\libraries\\loader.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A6A404A8-050D-4845-9BED-1679B10FFA07}|Fiverr_spreadsheet_project_1\\Fiverr_spreadsheet_project_1.csproj|solutionrelative:fiverr_spreadsheet_project_1\\libraries\\loader.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -13,10 +17,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{A6A404A8-050D-4845-9BED-1679B10FFA07}|Fiverr_spreadsheet_project_1\\Fiverr_spreadsheet_project_1.csproj|C:\\Users\\mraqu\\source\\repos\\Fiverr_spreadsheet_project_1\\fiverr_spreadsheet_project_1\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{A6A404A8-050D-4845-9BED-1679B10FFA07}|Fiverr_spreadsheet_project_1\\Fiverr_spreadsheet_project_1.csproj|solutionrelative:fiverr_spreadsheet_project_1\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A6A404A8-050D-4845-9BED-1679B10FFA07}|Fiverr_spreadsheet_project_1\\Fiverr_spreadsheet_project_1.csproj|c:\\users\\mraqu\\source\\repos\\fiverr_spreadsheet_project_1\\fiverr_spreadsheet_project_1\\libraries\\datahandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A6A404A8-050D-4845-9BED-1679B10FFA07}|Fiverr_spreadsheet_project_1\\Fiverr_spreadsheet_project_1.csproj|solutionrelative:fiverr_spreadsheet_project_1\\libraries\\datahandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,7 +26,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
@@ -34,33 +34,33 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Loader.cs",
               "DocumentMoniker": "C:\\Users\\mraqu\\source\\repos\\Fiverr_spreadsheet_project_1\\Fiverr_spreadsheet_project_1\\Libraries\\Loader.cs",
               "RelativeDocumentMoniker": "Fiverr_spreadsheet_project_1\\Libraries\\Loader.cs",
               "ToolTip": "C:\\Users\\mraqu\\source\\repos\\Fiverr_spreadsheet_project_1\\Fiverr_spreadsheet_project_1\\Libraries\\Loader.cs",
               "RelativeToolTip": "Fiverr_spreadsheet_project_1\\Libraries\\Loader.cs",
-              "ViewState": "AgIAADcAAAAAAAAAAAAQwEUAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABEAAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-09T16:28:29.251Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
               "Title": "DataHandler.cs",
               "DocumentMoniker": "C:\\Users\\mraqu\\source\\repos\\Fiverr_spreadsheet_project_1\\Fiverr_spreadsheet_project_1\\Libraries\\DataHandler.cs",
               "RelativeDocumentMoniker": "Fiverr_spreadsheet_project_1\\Libraries\\DataHandler.cs",
               "ToolTip": "C:\\Users\\mraqu\\source\\repos\\Fiverr_spreadsheet_project_1\\Fiverr_spreadsheet_project_1\\Libraries\\DataHandler.cs",
               "RelativeToolTip": "Fiverr_spreadsheet_project_1\\Libraries\\DataHandler.cs",
-              "ViewState": "AgIAAOMBAAAAAAAAAAAAAA8CAAAgAAAAAAAAAA==",
+              "ViewState": "AgIAAGEAAAAAAAAAAAAmwHYAAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-09T03:07:18.733Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Form1.cs",
               "DocumentMoniker": "C:\\Users\\mraqu\\source\\repos\\Fiverr_spreadsheet_project_1\\Fiverr_spreadsheet_project_1\\Form1.cs",
               "RelativeDocumentMoniker": "Fiverr_spreadsheet_project_1\\Form1.cs",
@@ -73,15 +73,14 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "Form1.cs [Design]",
               "DocumentMoniker": "C:\\Users\\mraqu\\source\\repos\\Fiverr_spreadsheet_project_1\\Fiverr_spreadsheet_project_1\\Form1.cs",
               "RelativeDocumentMoniker": "Fiverr_spreadsheet_project_1\\Form1.cs",
               "ToolTip": "C:\\Users\\mraqu\\source\\repos\\Fiverr_spreadsheet_project_1\\Fiverr_spreadsheet_project_1\\Form1.cs [Design]",
               "RelativeToolTip": "Fiverr_spreadsheet_project_1\\Form1.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-09T01:51:12.866Z",
-              "EditorCaption": " [Design]"
+              "WhenOpened": "2025-08-09T01:51:12.866Z"
             }
           ]
         }

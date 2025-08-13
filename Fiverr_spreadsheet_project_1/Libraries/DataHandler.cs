@@ -256,7 +256,7 @@ namespace Fiverr_spreadsheet_project_1.Libraries
                 // Add values
                 using (var workbook = new XLWorkbook(excelPath))
                 {
-                    var ws = workbook.Worksheet(1);
+                    var ws = workbook.Worksheet(Loader.SHEET_NUMBER);
 
                     // Getting first empty row 
                     // Was using Column A now using B just incase number pattern isn't repeated
@@ -268,11 +268,16 @@ namespace Fiverr_spreadsheet_project_1.Libraries
                     for (int j = Loader.TITLEROW + 1; j < lastRow + 1; j++)
                     {
                         // We also must first find the start of the clients in the excel sheet
-                        if (ws.Cell(j, 1).DataType != XLDataType.Number) // Meaning: if we don't see the number indicating the increment of clients
+                        var _cell = ws.Cell(j, 1);
+                        if (_cell.DataType != XLDataType.Number || !_cell.HasFormula)
                         {
-                            continue; // Keep going until we find it
+                            var cellValue = _cell.GetValue<string>();
+                            
+                            if (!int.TryParse(cellValue, out int clientNumber))
+                            {
+                                continue; // Is not a client row
+                            }
                         }
-
                         var cell = ws.Cell(j, 2);
                         try
                         {
@@ -291,17 +296,17 @@ namespace Fiverr_spreadsheet_project_1.Libraries
                     // Get worker count (this is the amount of names displayed inside of the book)
                     List<string> workerNamesInBook = new List<string>();
                     int workerCount = 0;
-                    if (!ws.Cell(2, 47).IsEmpty())
+                    if (!ws.Cell(Loader.TITLEROW, 47).IsEmpty())
                     {
-                        workerNamesInBook.Add(ws.Cell(2, 47).GetValue<string>());
+                        workerNamesInBook.Add(ws.Cell(Loader.TITLEROW, 47).GetValue<string>());
                         workerCount++;
 
                         bool countFound = false;
                         while (!countFound)
                         {
-                            if (!ws.Cell(2, 47 + (workerCount * 2)).IsEmpty())
+                            if (!ws.Cell(Loader.TITLEROW, 47 + (workerCount * 2)).IsEmpty())
                             {
-                                workerNamesInBook.Add(ws.Cell(2, 47 + (workerCount * 2)).GetValue<string>());
+                                workerNamesInBook.Add(ws.Cell(Loader.TITLEROW, 47 + (workerCount * 2)).GetValue<string>());
                                 workerCount++;
                             }
                             else
@@ -321,11 +326,22 @@ namespace Fiverr_spreadsheet_project_1.Libraries
 
                         // First add the number
                         if (ogIndex == -1)
-                            ws.Cell(index, 1).Value = index - 2;
+                            ws.Cell(index, 1).Value = 404; // index - Loader.TITLEROW
 
                         // Next add the Client name
                         if (ogIndex == -1)
-                            ws.Cell(index, 2).Value = c.clientName;
+                        {
+                            string _clientName = c.clientName;
+
+                            if (_clientName.StartsWith("\"\"") && _clientName.EndsWith("\"\""))
+                            {
+                                _clientName = _clientName.Substring(1, _clientName.Length - 2);
+                            }
+
+                            _clientName = _clientName.Trim('"');
+
+                            ws.Cell(index, 2).Value = _clientName;
+                        }
 
                         // Add to the location list
                         if (ogIndex == -1)
@@ -492,12 +508,19 @@ namespace Fiverr_spreadsheet_project_1.Libraries
                             var cell = ws.Cell(clientRowLocation[client.Key], 47 + (workerNamesInBook.IndexOf(worker.Key) * 2));
                             if (!cell.IsEmpty())
                             {
-                                if (cell.DataType != XLDataType.Number)
-                                    throw new Exception($"Error while totaling worker hours: Expected a number in cell {cell.Address}, but found '{cell.GetValue<string>()}'");
+                                /*if (cell.DataType != XLDataType.Number)
+                                    throw new Exception($"Error while totaling worker hours: Expected a number in cell {cell.Address}, but found '{cell.GetValue<string>()}'");*/
 
                                 try
                                 {
-                                    temp = cell.Value.GetNumber();
+                                    if (cell.DataType == XLDataType.Number) // it's empty if there's no number value in it duhh
+                                    {
+                                        if (cell.HasFormula)
+                                        {
+                                            cell.FormulaA1 = string.Empty;
+                                        }
+                                        temp = cell.Value.GetNumber();
+                                    }
                                 }
                                 catch (InvalidCastException ex)
                                 {
