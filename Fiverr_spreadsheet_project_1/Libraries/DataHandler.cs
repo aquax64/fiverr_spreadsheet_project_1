@@ -75,7 +75,7 @@ namespace Fiverr_spreadsheet_project_1.Libraries
                 return 0.0;
 
             if (cell.DataType != XLDataType.Number)
-                throw new Exception($"Expected a number in cell {cell.Address}, but found '{cell.GetValue<string>()}'");
+                throw new Exception($"Error while totaling category hours: Expected a number in cell {cell.Address}, but found '{cell.GetValue<string>()}'");
 
             return cell.GetDouble(); // same as Value.GetNumber()
         }
@@ -386,7 +386,7 @@ namespace Fiverr_spreadsheet_project_1.Libraries
                         if (!cell.IsEmpty())
                         {
                             if (cell.DataType != XLDataType.Number)
-                                throw new Exception($"Expected a number in cell {cell.Address}, but found '{cell.GetValue<string>()}'");
+                                throw new Exception($"Error while totaling category hours: Expected a number in cell {cell.Address}, but found '{cell.GetValue<string>()}'");
 
                             travelTotal = cell.Value.GetNumber() + c.totalTravelHours;
                         }
@@ -445,8 +445,14 @@ namespace Fiverr_spreadsheet_project_1.Libraries
                         foreach (var client in worker.Value)
                         {
                             double temp = 0.0;
-                            if (!ws.Cell(clientRowLocation[client.Key], 47 + (workerNamesInBook.IndexOf(worker.Key) * 2)).IsEmpty())
+                            var cell = ws.Cell(clientRowLocation[client.Key], 47 + (workerNamesInBook.IndexOf(worker.Key) * 2));
+                            if (!cell.IsEmpty())
+                            {
+                                if (cell.DataType != XLDataType.Number)
+                                    throw new Exception($"Error while totaling worker hours: Expected a number in cell {cell.Address}, but found '{cell.GetValue<string>()}'");
+
                                 temp = ws.Cell(clientRowLocation[client.Key], 47 + (workerNamesInBook.IndexOf(worker.Key) * 2)).Value.GetNumber();
+                            }
                             ws.Cell(clientRowLocation[client.Key], 47 + (workerNamesInBook.IndexOf(worker.Key) * 2)).Value = client.Value + temp;
                         }
                     }
