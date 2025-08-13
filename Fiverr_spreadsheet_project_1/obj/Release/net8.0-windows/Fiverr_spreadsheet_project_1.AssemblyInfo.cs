@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Fiverr_spreadsheet_project_1")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1b37f9781d92c2ed0048099d16266598599d9794")]
 [assembly: System.Reflection.AssemblyProductAttribute("Fiverr_spreadsheet_project_1")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Fiverr_spreadsheet_project_1")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
