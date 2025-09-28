@@ -16,6 +16,7 @@ namespace Fiverr_spreadsheet_project_1.Libraries
         public static int ADMIN_START = -1;
         public static int TITLEROW = -1;
         public static int SHEET_NUMBER = -1;
+        public static int HOURS_OFFSET = -1;
 
         public static void LoadConfig()
         {
@@ -113,6 +114,11 @@ namespace Fiverr_spreadsheet_project_1.Libraries
                     {
                         SHEET_NUMBER = int.Parse(splits[1]);
                     }
+
+                    if (splits[0] == "HOURS_OFFSET")
+                    {
+                        HOURS_OFFSET = int.Parse(splits[1]);
+                    }
                 }
             }
             catch (FormatException ex)
@@ -132,6 +138,10 @@ namespace Fiverr_spreadsheet_project_1.Libraries
             if (SHEET_NUMBER == -1)
             {
                 MessageBox.Show("Error loading \"excelstart.txt\" config. SHEET_NUMBER arguments incorrect");
+            }
+            if (HOURS_OFFSET == -1)
+            {
+                MessageBox.Show("Error loading \"excelstart.txt\" config. HOURS_OFFSET arguments incorrect");
             }
         }
     }

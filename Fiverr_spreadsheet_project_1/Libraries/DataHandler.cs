@@ -296,17 +296,17 @@ namespace Fiverr_spreadsheet_project_1.Libraries
                     // Get worker count (this is the amount of names displayed inside of the book)
                     List<string> workerNamesInBook = new List<string>();
                     int workerCount = 0;
-                    if (!ws.Cell(Loader.TITLEROW, 47).IsEmpty())
+                    if (!ws.Cell(Loader.TITLEROW, ( Loader.HOURS_OFFSET + 47 )).IsEmpty())
                     {
-                        workerNamesInBook.Add(ws.Cell(Loader.TITLEROW, 47).GetValue<string>());
+                        workerNamesInBook.Add(ws.Cell(Loader.TITLEROW, ( Loader.HOURS_OFFSET + 47 )).GetValue<string>());
                         workerCount++;
 
                         bool countFound = false;
                         while (!countFound)
                         {
-                            if (!ws.Cell(Loader.TITLEROW, 47 + (workerCount * 2)).IsEmpty())
+                            if (!ws.Cell(Loader.TITLEROW, ( Loader.HOURS_OFFSET + 47 ) + (workerCount * 2)).IsEmpty())
                             {
-                                workerNamesInBook.Add(ws.Cell(Loader.TITLEROW, 47 + (workerCount * 2)).GetValue<string>());
+                                workerNamesInBook.Add(ws.Cell(Loader.TITLEROW, ( Loader.HOURS_OFFSET + 47 ) + (workerCount * 2)).GetValue<string>());
                                 workerCount++;
                             }
                             else
@@ -353,85 +353,85 @@ namespace Fiverr_spreadsheet_project_1.Libraries
                         // Then job hours
 
                         // Planning
-                        double planningTotal = GetNumberOrThrow(ws.Cell(ogIndex == -1 ? index : ogIndex, 8));
+                        double planningTotal = GetNumberOrThrow(ws.Cell(ogIndex == -1 ? index : ogIndex, 8 + Loader.HOURS_OFFSET));
                         if (c.jobHours.ContainsKey("Planning"))
                         {
                             planningTotal += c.jobHours["Planning"];
-                            ws.Cell(ogIndex == -1 ? index : ogIndex, 8).Value = planningTotal;
+                            ws.Cell(ogIndex == -1 ? index : ogIndex, 8 + Loader.HOURS_OFFSET).Value = planningTotal;
                         }
 
                         // Inventory Co.
-                        double inventoryTotal = GetNumberOrThrow(ws.Cell(ogIndex == -1 ? index : ogIndex, 10));
+                        double inventoryTotal = GetNumberOrThrow(ws.Cell(ogIndex == -1 ? index : ogIndex, 10 + Loader.HOURS_OFFSET));
                         if (c.jobHours.ContainsKey("Inventory Co."))
                         {
                             inventoryTotal += c.jobHours["Inventory Co."];
-                            ws.Cell(ogIndex == -1 ? index : ogIndex, 10).Value = inventoryTotal;
+                            ws.Cell(ogIndex == -1 ? index : ogIndex, 10 + Loader.HOURS_OFFSET).Value = inventoryTotal;
                         }
 
                         // Interim
-                        double interimTotal = GetNumberOrThrow(ws.Cell(ogIndex == -1 ? index : ogIndex, 12));
+                        double interimTotal = GetNumberOrThrow(ws.Cell(ogIndex == -1 ? index : ogIndex, 12 + Loader.HOURS_OFFSET));
                         if (c.jobHours.ContainsKey("Inventory Co."))
                         {
                             interimTotal += c.jobHours["Inventory Co."];
-                            ws.Cell(ogIndex == -1 ? index : ogIndex, 12).Value = interimTotal;
+                            ws.Cell(ogIndex == -1 ? index : ogIndex, 12 + Loader.HOURS_OFFSET).Value = interimTotal;
                         }
 
                         // Fieldwork
-                        double fieldworkTotal = GetNumberOrThrow(ws.Cell(ogIndex == -1 ? index : ogIndex, 14));
+                        double fieldworkTotal = GetNumberOrThrow(ws.Cell(ogIndex == -1 ? index : ogIndex, 14 + Loader.HOURS_OFFSET));
                         if (c.jobHours.ContainsKey("Fieldwork"))
                         {
                             fieldworkTotal += c.jobHours["Fieldwork"];
-                            ws.Cell(ogIndex == -1 ? index : ogIndex, 14).Value = fieldworkTotal;
+                            ws.Cell(ogIndex == -1 ? index : ogIndex, 14 + Loader.HOURS_OFFSET).Value = fieldworkTotal;
                         }
 
                         // Reporting
-                        double reportingTotal = GetNumberOrThrow(ws.Cell(ogIndex == -1 ? index : ogIndex, 16));
+                        double reportingTotal = GetNumberOrThrow(ws.Cell(ogIndex == -1 ? index : ogIndex, 16 + Loader.HOURS_OFFSET));
                         if (c.jobHours.ContainsKey("Reporting"))
                         {
                             reportingTotal += c.jobHours["Reporting"];
-                            ws.Cell(ogIndex == -1 ? index : ogIndex, 16).Value = reportingTotal;
+                            ws.Cell(ogIndex == -1 ? index : ogIndex, 16 + Loader.HOURS_OFFSET).Value = reportingTotal;
                         }
 
                         // Review and Sup
-                        double revSupTotal = GetNumberOrThrow(ws.Cell(ogIndex == -1 ? index : ogIndex, 18));
+                        double revSupTotal = GetNumberOrThrow(ws.Cell(ogIndex == -1 ? index : ogIndex, 18 + Loader.HOURS_OFFSET));
                         if (c.jobHours.ContainsKey("Review and Sup"))
                         {
                             revSupTotal += c.jobHours["Review and Sup"];
-                            ws.Cell(ogIndex == -1 ? index : ogIndex, 18).Value = revSupTotal;
+                            ws.Cell(ogIndex == -1 ? index : ogIndex, 18 + Loader.HOURS_OFFSET).Value = revSupTotal;
                         }
 
                         // Meetings
-                        double meetingsTotal = GetNumberOrThrow(ws.Cell(ogIndex == -1 ? index : ogIndex, 20));
+                        double meetingsTotal = GetNumberOrThrow(ws.Cell(ogIndex == -1 ? index : ogIndex, 20 + Loader.HOURS_OFFSET));
                         if (c.jobHours.ContainsKey("Meetings"))
                         {
                             meetingsTotal += c.jobHours["Meetings"];
-                            ws.Cell(ogIndex == -1 ? index : ogIndex, 20).Value = meetingsTotal;
+                            ws.Cell(ogIndex == -1 ? index : ogIndex, 20 + Loader.HOURS_OFFSET).Value = meetingsTotal;
                         }
 
                         // Processing
-                        double processingTotal = GetNumberOrThrow(ws.Cell(ogIndex == -1 ? index : ogIndex, 22));
+                        double processingTotal = GetNumberOrThrow(ws.Cell(ogIndex == -1 ? index : ogIndex, 22 + Loader.HOURS_OFFSET));
                         if (c.jobHours.ContainsKey("Processing"))
                         {
                             processingTotal += c.jobHours["Processing"];
-                            ws.Cell(ogIndex == -1 ? index : ogIndex, 22).Value = processingTotal;
+                            ws.Cell(ogIndex == -1 ? index : ogIndex, 22 + Loader.HOURS_OFFSET).Value = processingTotal;
                         }
 
                         // Completion
-                        double completionTotal = GetNumberOrThrow(ws.Cell(ogIndex == -1 ? index : ogIndex, 24));
+                        double completionTotal = GetNumberOrThrow(ws.Cell(ogIndex == -1 ? index : ogIndex, 24 + Loader.HOURS_OFFSET));
                         if (c.jobHours.ContainsKey("Completion"))
                         {
                             completionTotal += c.jobHours["Completion"];
-                            ws.Cell(ogIndex == -1 ? index : ogIndex, 24).Value = completionTotal;
+                            ws.Cell(ogIndex == -1 ? index : ogIndex, 24 + Loader.HOURS_OFFSET).Value = completionTotal;
                         }
 
 
                         // Total
                         double total = planningTotal + inventoryTotal + interimTotal + fieldworkTotal + reportingTotal + revSupTotal + meetingsTotal + processingTotal + completionTotal;
-                        ws.Cell(ogIndex == -1 ? index : ogIndex, 26).Value = total;
+                        ws.Cell(ogIndex == -1 ? index : ogIndex, 26 + Loader.HOURS_OFFSET).Value = total;
 
                         // Travel
                         double travelTotal = 0.0;
-                        var cell = ws.Cell(ogIndex == -1 ? index : ogIndex, 28);
+                        var cell = ws.Cell(ogIndex == -1 ? index : ogIndex, 28 + Loader.HOURS_OFFSET);
                         if (!cell.IsEmpty())
                         {
                             if (cell.IsMerged())
@@ -452,11 +452,11 @@ namespace Fiverr_spreadsheet_project_1.Libraries
                         }
                         else
                             travelTotal = c.totalTravelHours;
-                        ws.Cell(ogIndex == -1 ? index : ogIndex, 28).Value = travelTotal;
+                        ws.Cell(ogIndex == -1 ? index : ogIndex, 28 + Loader.HOURS_OFFSET).Value = travelTotal;
 
                         // Grand Total
                         double grandTotal = total + travelTotal;
-                        ws.Cell(ogIndex == -1 ? index : ogIndex, 30).Value = grandTotal;
+                        ws.Cell(ogIndex == -1 ? index : ogIndex, 30 + Loader.HOURS_OFFSET).Value = grandTotal;
 
 
                         // Only need to increment if a client isn't already in the books
@@ -482,18 +482,18 @@ namespace Fiverr_spreadsheet_project_1.Libraries
 
                         // Shift every column past the last worker on to the right by N (maybe 2) columns
                         int N = 2;
-                        ws.Column(47 + (workerCount * 2) + 1).InsertColumnsBefore(N);
+                        ws.Column(( Loader.HOURS_OFFSET + 47 ) + (workerCount * 2) + 1).InsertColumnsBefore(N);
 
                         // Format Columns
                         for (int j = 0; j < N; j++)
                         {
-                            // int newIndex = (47 + (workerCount * 2) + 1) + j;
-                            int newIndex = (47 + (workerCount * 2) - 1) + j;
-                            ws.Column(newIndex).Style = ws.Column(47).Style;
+                            // int newIndex = (( Loader.HOURS_OFFSET + 47 ) + (workerCount * 2) + 1) + j;
+                            int newIndex = (( Loader.HOURS_OFFSET + 47 ) + (workerCount * 2) - 1) + j;
+                            ws.Column(newIndex).Style = ws.Column(( Loader.HOURS_OFFSET + 47 )).Style;
                         }
 
                         // Add the workers name
-                        int col = 47 + (workerCount * 2);
+                        int col = ( Loader.HOURS_OFFSET + 47 ) + (workerCount * 2);
                         ws.Cell(Loader.TITLEROW, col).Value = name;
                         ws.Cell(Loader.TITLEROW, col).Style.Border.BottomBorder = XLBorderStyleValues.Thin;
 
@@ -505,7 +505,7 @@ namespace Fiverr_spreadsheet_project_1.Libraries
                         foreach (var client in worker.Value)
                         {
                             double temp = 0.0;
-                            var cell = ws.Cell(clientRowLocation[client.Key], 47 + (workerNamesInBook.IndexOf(worker.Key) * 2));
+                            var cell = ws.Cell(clientRowLocation[client.Key], ( Loader.HOURS_OFFSET + 47 ) + (workerNamesInBook.IndexOf(worker.Key) * 2));
                             if (!cell.IsEmpty())
                             {
                                 /*if (cell.DataType != XLDataType.Number)
@@ -527,7 +527,7 @@ namespace Fiverr_spreadsheet_project_1.Libraries
                                     throw new Exception($"(Worker cell) Invalid number format in cell {cell.Address}: {ex.Message}");
                                 }
                             }
-                            ws.Cell(clientRowLocation[client.Key], 47 + (workerNamesInBook.IndexOf(worker.Key) * 2)).Value = client.Value + temp;
+                            ws.Cell(clientRowLocation[client.Key], ( Loader.HOURS_OFFSET + 47 ) + (workerNamesInBook.IndexOf(worker.Key) * 2)).Value = client.Value + temp;
                         }
                     }
 
