@@ -269,14 +269,15 @@ namespace Fiverr_spreadsheet_project_1.Libraries
                     {
                         // We also must first find the start of the clients in the excel sheet
                         var _cell = ws.Cell(j, 1);
-                        if (_cell.DataType != XLDataType.Number || !_cell.HasFormula)
+                        if (_cell.IsEmpty())
                         {
-                            var cellValue = _cell.GetValue<string>();
-                            
-                            if (!int.TryParse(cellValue, out int clientNumber))
-                            {
-                                continue; // Is not a client row
-                            }
+                            continue; // Is not a client row
+                        } else if (ws.Cell(j, 2).IsEmpty())
+                        {
+                            // If it's not empty, the col B cell 
+                            // should not be empty as well for
+                            // it to be a client
+                            continue;
                         }
                         var cell = ws.Cell(j, 2);
                         try
