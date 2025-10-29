@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "KjbpO4ujP0w=",
+  "dgSpecHash": "YtNLdbtv2jw=",
   "success": true,
-  "projectFilePath": "C:\\Users\\mraqu\\source\\repos\\Fiverr_spreadsheet_project_1\\Fiverr_spreadsheet_project_1\\Fiverr_spreadsheet_project_1.csproj",
+  "projectFilePath": "C:\\Users\\mraqu\\Source\\Repos\\fiverr_spreadsheet_project_1\\Fiverr_spreadsheet_project_1\\Fiverr_spreadsheet_project_1.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\mraqu\\.nuget\\packages\\closedxml\\0.105.0\\closedxml.0.105.0.nupkg.sha512",
     "C:\\Users\\mraqu\\.nuget\\packages\\closedxml.parser\\2.0.0\\closedxml.parser.2.0.0.nupkg.sha512",
+    "C:\\Users\\mraqu\\.nuget\\packages\\csvhelper\\33.1.0\\csvhelper.33.1.0.nupkg.sha512",
     "C:\\Users\\mraqu\\.nuget\\packages\\documentformat.openxml\\3.1.1\\documentformat.openxml.3.1.1.nupkg.sha512",
     "C:\\Users\\mraqu\\.nuget\\packages\\documentformat.openxml.framework\\3.1.1\\documentformat.openxml.framework.3.1.1.nupkg.sha512",
     "C:\\Users\\mraqu\\.nuget\\packages\\excelnumberformat\\1.1.0\\excelnumberformat.1.1.0.nupkg.sha512",

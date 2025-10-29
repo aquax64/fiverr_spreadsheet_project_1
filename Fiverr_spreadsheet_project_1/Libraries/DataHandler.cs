@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ClosedXML.Excel;
+using CsvHelper;
+using System.Globalization;
 using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace Fiverr_spreadsheet_project_1.Libraries
@@ -42,23 +44,25 @@ namespace Fiverr_spreadsheet_project_1.Libraries
 
         public string[][] ReadCsv(string csvPath)
         {
-            string[] lines;
-
             string[][] data = null;
 
             try
             {
-                // Read all lines
-                lines = File.ReadAllLines(csvPath);
-            
-
-                // Put into a 2D array in the format of [row][column]
-                data = new string[lines.Length][];
-
-                for (int i = 0; i < lines.Length; i++)
+                // New Csv reader
+                using (var reader = new StreamReader(csvPath)) ;
+                using (var csv = new CsvReader(new StreamReader(csvPath), CultureInfo.InvariantCulture))
                 {
-                    // Split into columns
-                    data[i] = lines[i].Split(',');
+                    var records = new List<string[]>();
+                    while (csv.Read())
+                    {
+                        var row = new List<string>();
+                        for (int i = 0; csv.TryGetField<string>(i, out var field); i++)
+                        {
+                            row.Add(field);
+                        }
+                        records.Add(row.ToArray());
+                    }
+                    data = records.ToArray();
                 }
             }
             catch (Exception ex)
